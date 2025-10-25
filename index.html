@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Casa da Vovó — Cardápio</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Poppins", sans-serif;
+    background: #fff6eb;
+    color: #4b2e0e;
+    line-height: 1.4;
+  }
+  .container { max-width: 1100px; margin: 20px auto; padding: 16px; text-align: center; }
+  
+  /* Cabeçalho */
+  header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0;
+  }
+  header img.logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 4px solid #c27630;
+  }
+  header h1 {
+    font-size: 32px;
+    color: #4b2e0e;
+    margin-top: 8px;
+  }
+  header p {
+    font-size: 16px;
+    color: #7b5b36;
+  }
+
+  /* Busca */
+  .controls { margin: 20px 0; }
+  .search input {
+    padding: 10px;
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #d6b99e;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: #fff6eb;
+    border-radius: 12px;
+    border: 1px solid #f0e0cc;
+    box-shadow: 0 4px 8px rgba(100, 60, 20, 0.06);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 16px;
+    cursor: pointer;
+  }
+  .card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 20px rgba(100, 60, 20, 0.2);
+  }
+  .card-body { padding: 0; }
+  .card-title { font-weight: 700; margin-bottom: 6px; }
+  .card-desc { font-size: 14px; color: #7b5b36; margin-bottom: 6px; }
+  .card-price { font-weight: 700; color: #c27630; font-size: 16px; }
+
+  /* Footer */
+  footer { margin: 40px 0; text-align: center; color: #7b5b36; font-size: 14px; }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+  }
+  .modal-content {
+    background: #fff6eb;
+    padding: 24px;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+  }
+  .modal-close {
+    position: absolute;
+    top: 12px; right: 16px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <img src="7776e01a-7764-4f9b-a879-fa4f1907cf4d.png" alt="Logo Casa da Vovó" class="logo"/>
+    <h1>Casa da Vovó</h1>
+    <p>Comidinhas caseiras e amor de vó 💛</p>
+  </header>
+
+  <section class="controls">
+    <div class="search">
+      <input id="searchInput" placeholder="Pesquisar prato..." />
+    </div>
+  </section>
+
+  <main>
+    <div id="grid" class="grid"></div>
+  </main>
+
+  <footer>Casa da Vovó — Cardápio oficial 💕</footer>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span id="modalClose" class="modal-close">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <p id="modalDesc"></p>
+    <p id="modalPrice" style="font-weight:700; color:#c27630;"></p>
+  </div>
+</div>
+
+<script>
+const menu = [
+  { title: "Paçoca de Rolha", desc: "Paçoca caseira tradicional em formato de rolha", price: 3.5 },
+  { title: "Bolo de Cenoura", desc: "Bolo fofinho com cobertura de chocolate", price: 15.0 },
+  { title: "Café Coado", desc: "Café fresquinho da vovó", price: 5.0 },
+  { title: "Café Expresso", desc: "Pequeno e intenso", price: 6.0 },
+];
+
+const grid = document.getElementById("grid");
+const searchInput = document.getElementById("searchInput");
+
+const modal = document.getElementById("modal");
+const modalTitle = document.getElementById("modalTitle");
+const modalDesc = document.getElementById("modalDesc");
+const modalPrice = document.getElementById("modalPrice");
+const modalClose = document.getElementById("modalClose");
+
+function renderGrid() {
+  grid.innerHTML = "";
+  const q = searchInput.value.toLowerCase();
+  menu
+    .filter(item => item.title.toLowerCase().includes(q))
+    .forEach(it => {
+      const el = document.createElement("div");
+      el.className = "card";
+      el.innerHTML = `
+        <div class="card-body">
+          <div class="card-title">${it.title}</div>
+          <div class="card-desc">${it.desc}</div>
+          <div class="card-price">R$ ${it.price.toFixed(2)}</div>
+        </div>`;
+      el.addEventListener("click", () => openModal(it));
+      grid.appendChild(el);
+    });
+}
+
+function openModal(item) {
+  modalTitle.textContent = item.title;
+  modalDesc.textContent = item.desc;
+  modalPrice.textContent = `R$ ${item.price.toFixed(2)}`;
+  modal.style.display = "flex";
+}
+
+modalClose.addEventListener("click", () => {
+  modal.style.display = "none";
+});
+
+window.addEventListener("click", (e) => {
+  if (e.target === modal) modal.style.display = "none";
+});
+
+searchInput.addEventListener("input", renderGrid);
+renderGrid();
+</script>
+</body>
+</html>
