@@ -23,7 +23,7 @@ O Cardápio Casa de Vó foi criado com o objetivo de:
 
 ## 🚀 Como Acessar
 O cardápio está disponível online através do link:  
-[Cardápio Casa de Vó](https://cardapio-casa-de-v.vercel.app/)
+[Cardápio Casa de Vó](https://casa-de-vovo.vercel.app)
 
 ## 📌 Contato
 Para pedidos ou dúvidas, entre em contato via WhatsApp:  
